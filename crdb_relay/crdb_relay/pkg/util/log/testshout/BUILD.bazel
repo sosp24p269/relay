@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_test")
+
+go_test(
+    name = "testshout_test",
+    size = "small",
+    srcs = ["shout_test.go"],
+    exec_properties = select({
+        "//build/toolchains:is_heavy": {"Pool": "heavy"},
+        "//conditions:default": {"Pool": "default"},
+    }),
+    deps = [
+        "//pkg/util/log",
+        "//pkg/util/log/logconfig",
+        "//pkg/util/log/severity",
+    ],
+)

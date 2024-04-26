@@ -1,0 +1,25 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "logictestbase",
+    testonly = 1,
+    srcs = ["logictestbase.go"],
+    importpath = "github.com/cockroachdb/cockroach/pkg/sql/logictest/logictestbase",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/build",
+        "//pkg/clusterversion",
+        "//pkg/roachpb",
+    ],
+)
+
+go_test(
+    name = "logictestbase_test",
+    srcs = ["logictestbase_test.go"],
+    embed = [":logictestbase"],
+    exec_properties = select({
+        "//build/toolchains:is_heavy": {"Pool": "heavy"},
+        "//conditions:default": {"Pool": "default"},
+    }),
+    deps = ["//pkg/clusterversion"],
+)
